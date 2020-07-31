@@ -3,7 +3,7 @@ const array = [];
 window.onload = initialize;
 
 function initialize() {
-    generateArray(100);
+    generateArray(10);
     renderVisualizer();
 }
 
@@ -15,10 +15,11 @@ function generateArray(arrSize) {
 
 function renderVisualizer() {
     for(var i = 0; i < array.length; i++) {
-        var barDiv = document.createElement("div");
-        barDiv.textContent = array[i];
-        barDiv.style.textAlign = "center";
-        document.getElementById("bar-container").appendChild(barDiv);
+        var arrayBar = document.createElement("div");
+        arrayBar.className = "array-bar"
+        arrayBar.textContent = array[i];
+        arrayBar.style.textAlign = "center";
+        document.getElementById("bar-container").appendChild(arrayBar);
     }
 }
 

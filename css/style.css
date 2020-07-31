@@ -1,0 +1,14 @@
+#bar-container {
+    display: flex;
+    border-style: solid;
+    height: 100%;
+    width: 100%;
+}
+
+.array-bar {
+    background-color: red;
+    border-style: solid;
+    height: 100%;
+    width: 3vw;
+    margin: 0.5vw;
+}
