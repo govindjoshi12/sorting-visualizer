@@ -1,14 +1,30 @@
-#bar-container {
-    display: flex;
-    border-style: solid;
+/* 
+Why is there a scroll bar?
+How to make app-container height be the maximum, 
+and everything else should be contained inside
+*/
+
+#app-container {
     height: 100%;
     width: 100%;
 }
 
-.array-bar {
-    background-color: red;
-    border-style: solid;
+#control-navbar {
+    background-color: skyblue;
+    margin-bottom: 0.5vw;
+}
+
+#bar-container {
+    /*Uses flexbox for vertical alignment, 
+    flex-end aligns divs to bottom of parent*/
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
     height: 100%;
-    width: 3vw;
-    margin: 0.5vw;
+}
+
+/* Should be implemented dynamically*/
+.array-bar {
+    background-color: gray;
 }
