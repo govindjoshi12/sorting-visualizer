@@ -93,7 +93,7 @@ function selectionSortAnimated() {
             }, ANIM_SPEED * i * j);
             setTimeout(() => {
                 barArr[j].style.backgroundColor = "gray";
-            }, ANIM_SPEED * i * (j + 1));
+            }, ANIM_SPEED * i  * (j + 1));
         }
 
         barArr[i].style.backgroundColor = "gray";
