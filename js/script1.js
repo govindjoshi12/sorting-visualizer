@@ -58,73 +58,25 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-//Sorts
-function selectionSort() {
-    var len = array.length;
-    for(var i = 0; i < len - 1; i++) {
-        var minIndex = i;
-        for(var j = i + 1; j < len; j++) {
-            if(array[j] < array[minIndex])
-                minIndex = j;
-        }
-        var temp = array[minIndex];
-        array[minIndex] = array[i];
-        array[i] = temp;
-    }
-    renderVisualizer();
-}
-
 //Inefficient setTimeout animation
 function selectionSortAnimated() {
-    let barArr = document.getElementById("bar-container").childNodes;
-    let len = array.length;
-    for(let i = 0; i < len - 1; i++) {
-        
-        let minIndex = i;
-
-        barArr[i].style.backgroundColor = "red";
-
-        for(let j = i + 1; j < len; j++) {
-            if(array[j] < array[minIndex])
-                minIndex = j;
-            
-            setTimeout(() => {
-                barArr[j].style.backgroundColor = "red";
-            }, ANIM_SPEED * i * j);
-            setTimeout(() => {
-                barArr[j].style.backgroundColor = "gray";
-            }, ANIM_SPEED * i  * (j + 1));
+    var barContainer = document.getElementById("bar-container");
+    var barArr = barContainer.childNodes;
+    for(let i = 0; i < array.length - 1; i++) {
+        let min_idx = i;
+        for(let j = i + 1; j < array.length; j++) {
+            if(array[j] < array[min_idx]) {
+                min_idx = j;
+            }
         }
 
-        barArr[i].style.backgroundColor = "gray";
-
-        let temp = array[minIndex];
-        array[minIndex] = array[i];
+        var temp = array[min_idx];
+        array[min_idx] = array[i];
         array[i] = temp;
 
-        let tempNode = barArr[minIndex];
-        barArr[minIndex] = barArr[i];
-        barArr[i] = tempNode;
-    }
-    console.log(array);
-}
-
-const ANIM_SPEED = 150;
-function highlightBars() {
-    let barArr = document.getElementById("bar-container").childNodes;
-    for(let i = 0; i < barArr.length; i++) {
-        setTimeout(() => {
-            barArr[i].style.backgroundColor = "red";
-        }, ANIM_SPEED * i);
-        setTimeout(() => {
-            barArr[i].style.backgroundColor = "gray";
-        }, ANIM_SPEED * (i+1));
-        //setTimeout is "non-blocking" so the moment setTimeout is called, 
-        //the next iteration of the loop commences, and the code inside
-        //that timer function executes once that timer ends. Thus, there is 
-        //no "animation" since all setTimeout calls happen in rapid succession, 
-        //and the code inside executes *timeout* later
-        //Using 1000 * i gives the desired result, but it calls a setTimeout
-        //function for EACH iteration... very inefficient. Other way?
+        setTimeout(() => {   
+            barContainer.insertBefore(barArr[i], barArr[min_idx])
+            barContainer.insertBefore(barArr[min_idx], barArr[i]);
+        }, i * 500);
     }
 }
