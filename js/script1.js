@@ -1,7 +1,7 @@
 let array = [];
-const ARRAY_SIZE = 10;
+const ARRAY_SIZE = 100;
 const MIN_NUM = 5;
-const MAX_NUM = 500;
+const MAX_NUM = 1000;
 
 window.onload = initialize;
 
@@ -65,6 +65,7 @@ function selectionSortAnimated() {
     for(let i = 0; i < array.length - 1; i++) {
         let min_idx = i;
         for(let j = i + 1; j < array.length; j++) {
+            // barArr[i].style.backgroundColor = "red";
             if(array[j] < array[min_idx]) {
                 min_idx = j;
             }
@@ -77,6 +78,9 @@ function selectionSortAnimated() {
         setTimeout(() => {   
             barContainer.insertBefore(barArr[i], barArr[min_idx])
             barContainer.insertBefore(barArr[min_idx], barArr[i]);
-        }, i * 500);
+            barArr[i].style.backgroundColor = "green";
+        }, i * 100);
     }
 }
+//Interrupting sort (by clicking randomize) doesn't stop animation, even though
+//array is still randomized...?
