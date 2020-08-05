@@ -60,8 +60,8 @@ function getRandomInt(min, max) {
 
 //Inefficient setTimeout animation
 function selectionSortAnimated() {
-    var barContainer = document.getElementById("bar-container");
-    var barArr = barContainer.childNodes;
+    let barContainer = document.getElementById("bar-container");
+    let barArr = barContainer.childNodes;
     for(let i = 0; i < array.length - 1; i++) {
         let min_idx = i;
         for(let j = i + 1; j < array.length; j++) {
@@ -71,12 +71,12 @@ function selectionSortAnimated() {
             }
         }
 
-        var temp = array[min_idx];
+        let temp = array[min_idx];
         array[min_idx] = array[i];
         array[i] = temp;
 
         setTimeout(() => {   
-            barContainer.insertBefore(barArr[i], barArr[min_idx])
+            barContainer.insertBefore(barArr[i], barArr[min_idx]);
             barContainer.insertBefore(barArr[min_idx], barArr[i]);
             barArr[i].style.backgroundColor = "green";
         }, i * 100);
@@ -84,3 +84,19 @@ function selectionSortAnimated() {
 }
 //Interrupting sort (by clicking randomize) doesn't stop animation, even though
 //array is still randomized...?
+
+function bubbleSortAnimated() {
+    let barContainer = document.getElementById("bar-container");
+    let barArr = barContainer.childNodes;
+    for(let i = 1; i < array.length; i++) {
+        let currIdx = i;
+        let timer = 0;
+        for(; array[currIdx] < array[currIdx - 1] && currIdx > 0; currIdx--) {
+            let temp = array[currIdx - 1];
+            array[currIdx - 1] = array[currIdx];
+            array[currIdx] = temp;
+            timer++;
+        }
+    }
+    console.log(array);
+}
