@@ -59,7 +59,7 @@ function getRandomInt(min, max) {
 }
 
 //Inefficient setTimeout animation
-function selectionSortAnimated() {
+function selectionSort() {
     let barContainer = document.getElementById("bar-container");
     let barArr = barContainer.childNodes;
     for(let i = 0; i < array.length - 1; i++) {
@@ -81,22 +81,51 @@ function selectionSortAnimated() {
             barArr[i].style.backgroundColor = "green";
         }, i * 100);
     }
+    disableButtons((array.length - 1) * 100);
 }
+
+function disableButtons(ms) {
+    let buttons = document.getElementsByClassName("button");
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = true;
+    }
+
+    setTimeout(() => {   
+        for(let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = false;
+        }
+    }, ms);
+}
+
 //Interrupting sort (by clicking randomize) doesn't stop animation, even though
 //array is still randomized...?
-
-function bubbleSortAnimated() {
-    let barContainer = document.getElementById("bar-container");
-    let barArr = barContainer.childNodes;
+function insertionSort() {
+    // let barContainer = document.getElementById("bar-container");
+    // let barArr = barContainer.childNodes;
     for(let i = 1; i < array.length; i++) {
         let currIdx = i;
-        let timer = 0;
         for(; array[currIdx] < array[currIdx - 1] && currIdx > 0; currIdx--) {
             let temp = array[currIdx - 1];
             array[currIdx - 1] = array[currIdx];
             array[currIdx] = temp;
-            timer++;
         }
     }
+    renderVisualizer();
+    console.log(array);
+}
+
+function bubbleSort() {
+    for(let i = 0; i < array.length - 1; i++) {
+        //After each iteration, i elements from the end of the array will be sorted
+        for(let j = 0; j < array.length - i - 1; j++) {
+            //Only swap if curr element is greater than next element
+            if(array[j] > array[j+1]) {
+                let temp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
+            }
+        }
+    }
+    renderVisualizer();
     console.log(array);
 }
