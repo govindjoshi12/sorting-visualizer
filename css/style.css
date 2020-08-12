@@ -4,13 +4,17 @@ How to make app-container height be the maximum,
 and everything else should be contained inside
 */
 
+body {
+    background-color: black;
+}
+
 #app-container {
     height: 100%;
     width: 100%;
 }
 
 #control-navbar {
-    background-color: lightcoral;
+    background-color: darkgrey;
     text-align: center;
     margin-bottom: 1vw;
     padding: 0.5vw;
@@ -28,15 +32,15 @@ and everything else should be contained inside
 
 /* Should be implemented dynamically*/
 .array-bar {
-    background-color: gray;
+    background-color: darkslategray;
 }
 
 .checking-bar {
-    background-color: purple;
+    background-color: orange;
 }
 
 .swapping-bar {
-    background-color: hotpink;
+    background-color: rebeccapurple;
 }
 
 .sorted-bar {
