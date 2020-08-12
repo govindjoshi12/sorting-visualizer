@@ -1,8 +1,8 @@
 let array = [];
-const ARRAY_SIZE = 100;
+const ARRAY_SIZE = 20;
 const MIN_NUM = 5;
 const MAX_NUM = 1000;
-const ANIM_SPEED = 1;
+const ANIM_SPEED = 50;
 var sorter = null;
 
 window.onload = initialize;
@@ -30,8 +30,8 @@ function renderVisualizer() {
         barContainer.removeChild(barContainer.lastChild);
     }
 
-    var heightMult = barContainer.offsetHeight / max_element;
-    var temp = barContainer.offsetWidth / array.length;
+    var heightMult = barContainer.clientHeight / max_element;
+    var temp = barContainer.clientWidth / array.length;
     var barWidth = temp * 0.9;
     var margin = temp * 0.05;
     //Creating array element bars
@@ -62,7 +62,9 @@ function getRandomInt(min, max) {
 
 function sort(sortFunction) {
     sorter = sortFunction;
+    //disableButtons(true);
     animate();
+    //disableButtons(false);
 }
 
 function animate() {
@@ -71,7 +73,7 @@ function animate() {
     }
 }
 
-function buttonControl(bool) {
+function disableButtons(bool) {
     let buttons = document.getElementsByClassName("button");
     for(let i = 0; i < buttons.length; i++) {
         buttons[i].disabled = bool;
@@ -80,7 +82,7 @@ function buttonControl(bool) {
 
 //Inefficient setTimeout animation
 function* selectionSort() {
-    buttonControl(true);
+    disableButtons(true);
     let barContainer = document.getElementById("bar-container");
     let barArr = barContainer.childNodes;
     for(let i = 0; i < array.length - 1; i++) {
@@ -105,7 +107,8 @@ function* selectionSort() {
         barArr[i].style.backgroundColor = "green"; 
         yield;
     }
-    buttonControl(false);
+    barArr[array.length - 1].style.backgroundColor = "green"; 
+    disableButtons(false);
 }
 //Interrupting sort (by clicking randomize) doesn't stop animation, even though
 //array is still randomized...?
