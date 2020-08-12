@@ -34,3 +34,11 @@ and everything else should be contained inside
 .checking-bar {
     background-color: purple;
 }
+
+.swapping-bar {
+    background-color: hotpink;
+}
+
+.sorted-bar {
+    background-color: green;
+}
