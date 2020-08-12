@@ -2,6 +2,8 @@ let array = [];
 const ARRAY_SIZE = 100;
 const MIN_NUM = 5;
 const MAX_NUM = 1000;
+const ANIM_SPEED = 1;
+var sorter = null;
 
 window.onload = initialize;
 
@@ -58,8 +60,27 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function sort(sortFunction) {
+    sorter = sortFunction;
+    animate();
+}
+
+function animate() {
+    if(!sorter.next().done) {
+        setTimeout(animate, ANIM_SPEED);
+    }
+}
+
+function buttonControl(bool) {
+    let buttons = document.getElementsByClassName("button");
+    for(let i = 0; i < buttons.length; i++) {
+        buttons[i].disabled = bool;
+    }
+}
+
 //Inefficient setTimeout animation
-function selectionSort() {
+function* selectionSort() {
+    buttonControl(true);
     let barContainer = document.getElementById("bar-container");
     let barArr = barContainer.childNodes;
     for(let i = 0; i < array.length - 1; i++) {
@@ -69,36 +90,26 @@ function selectionSort() {
             if(array[j] < array[min_idx]) {
                 min_idx = j;
             }
+
+            barArr[j].classList.add("checking-bar");
+            yield;
+            barArr[j].classList.remove("checking-bar");
         }
 
         let temp = array[min_idx];
         array[min_idx] = array[i];
         array[i] = temp;
-
-        setTimeout(() => {   
-            barContainer.insertBefore(barArr[i], barArr[min_idx]);
-            barContainer.insertBefore(barArr[min_idx], barArr[i]);
-            barArr[i].style.backgroundColor = "green";
-        }, i * 100);
+ 
+        barContainer.insertBefore(barArr[i], barArr[min_idx]);
+        barContainer.insertBefore(barArr[min_idx], barArr[i]);
+        barArr[i].style.backgroundColor = "green"; 
+        yield;
     }
-    disableButtons((array.length - 1) * 100);
+    buttonControl(false);
 }
-
-function disableButtons(ms) {
-    let buttons = document.getElementsByClassName("button");
-    for(let i = 0; i < buttons.length; i++) {
-        buttons[i].disabled = true;
-    }
-
-    setTimeout(() => {   
-        for(let i = 0; i < buttons.length; i++) {
-            buttons[i].disabled = false;
-        }
-    }, ms);
-}
-
 //Interrupting sort (by clicking randomize) doesn't stop animation, even though
 //array is still randomized...?
+
 function insertionSort() {
     // let barContainer = document.getElementById("bar-container");
     // let barArr = barContainer.childNodes;
