@@ -10,7 +10,7 @@ var barWidth = null;
 var margin = null;
 
 // Array and Animation Properties
-const ARRAY_SIZE = 100;
+const ARRAY_SIZE = 30;
 const MIN_NUM = 35;
 const MAX_NUM = 1000;
 const ANIM_SPEED = 4; //setTimeout minimum is 4ms
@@ -74,6 +74,10 @@ function generateArrayBar(magnitude) {
     arrayBar.style.width = barWidth;
     arrayBar.style.margin = margin;
     return arrayBar;
+}
+
+function barHeight(magnitude) {
+    return magnitude * heightMult + "px";
 }
 
 function sort(sortFunction) {
@@ -204,10 +208,38 @@ function* bubbleSort() {
 }
 
 //Complex Sorts
-function mergeSort() {
+const animations = [];
+function* mergeSort() {
     mergeSortHelper(0, array.length - 1);
-    renderVisualizer();
-    console.log(array);
+    for(let i = 0; i < animations.length; i++) {
+        //Using assumption that coloring will happen at even indicies
+        //and "insertion" will happen at odd indicies
+        if(i % 2 == 0) {
+            let bar1 = animations[i][0];
+            let bar2 = animations[i][1];
+            try {
+                barArr[bar1].classList.add("checking-bar");
+                barArr[bar2].classList.add("checking-bar");
+            } catch(error) {/* No op */}
+            yield;
+            try {
+                barArr[bar1].classList.remove("checking-bar");
+                barArr[bar2].classList.remove("checking-bar");
+            } catch(error) {/* No op */}
+        } else {
+            //No need to swap any bars, just adjust height of sorted bar
+            //based on current value in integer array
+            let sortedIdx = animations[i];
+            let sortedBar = barArr[sortedIdx];
+            sortedBar.style.height = barHeight(array[sortedIdx]);
+            yield;
+        }
+    }
+    //Green Swoop
+    for(let i = 0; i < barArr.length; i++) {
+        barArr[i].classList.add("sorted-bar");
+        yield;
+    }
 }
 
 function mergeSortHelper(start, end) {
@@ -220,88 +252,50 @@ function mergeSortHelper(start, end) {
  }
 
 
-function* iterativeMergeSort() {
-    let n = array.length;
-    // For current size of subarrays to 
-    // be merged curr_size varies from  
-    // 1 to n/2 
-    let curr_size;                   
-    // For picking starting index of  
-    // left subarray to be merged 
-    let start;  
-    // Merge subarrays in bottom up  
-    // manner. First merge subarrays  
-    // of size 1 to create sorted  
-    // subarrays of size 2, then merge 
-    // subarrays of size 2 to create  
-    // sorted subarrays of size 4, and 
-    // so on. 
-    for (curr_size = 1; curr_size <= n-1; curr_size = 2*curr_size) {        
-        // Pick starting point of different 
-        // subarrays of current size 
-        for (start = 0; start < n-1; start += 2*curr_size) { 
-            // Find ending point of left  
-            // subarray. mid+1 is starting  
-            // point of right 
-            let mid = Math.min(start + curr_size - 1, n-1); 
-            let end = Math.min(start + 2*curr_size - 1, n-1); 
-        
-            // Merge Subarrays arr[left_start...mid] 
-            // & arr[mid+1...right_end] 
-            let len1 = mid - start + 1;
-            let len2 = end - mid;
-        
-            let arr1 = [];
-            let arr2 = [];
-            for(let i = 0; i < len1; i++) {
-                arr1[i] = array[start + i];
-            }
-            for(let i = 0; i < len2; i++) {
-                arr2[i] = array[mid + i + 1];
-            }
-        
-            let p1 = 0;
-            let p2 = 0;
-            let idx = start;
-            while(p1 < len1 && p2 < len2) {
-                barArr[start + p1].classList.add("checking-bar");
-                barArr[mid + 1 + p2].classList.add("checking-bar");
-                yield;
-                barArr[start + p1].classList.remove("checking-bar");
-                barArr[mid + 1 + p2].classList.remove("checking-bar");
+function merge(start, mid, end) {
+    let len1 = mid - start + 1;
+    let len2 = end - mid;
 
-                if(arr1[p1] < arr2[p2]) {
-                    array[idx] = arr1[p1];
-                    barArr[idx] = generateArrayBar(arr1[p1]);
-                    p1++;
-                } else {
-                    array[idx] = arr2[p2];
-                    barArr[idx] = generateArrayBar(arr2[p2]);
-                    p2++;
-                }
-                barArr[idx].classList.add("sorted-bar");
-                yield;
-                idx++;
-            }
-        
-            while(p1 < len1) {
-                array[idx] = arr1[p1];
-                barArr[idx] = generateArrayBar(arr1[p1]);
-                barArr[idx].classList.add("sorted-bar");
-                yield;
-                p1++;
-                idx++;
-            }
-            while(p2 < len2) {
-                array[idx] = arr2[p2];
-                barArr[idx] = generateArrayBar(arr1[p1]);
-                barArr[idx].classList.add("sorted-bar");
-                yield;
-                p2++;
-                idx++;
-            }
-        } 
+    let arr1 = [];
+    let arr2 = [];
+    for(let i = 0; i < len1; i++) {
+        arr1[i] = array[start + i];
     }
-    renderVisualizer();
-    console.log(array);
+    for(let i = 0; i < len2; i++) {
+        arr2[i] = array[mid + i + 1];
+    }
+
+    let p1 = 0;
+    let p2 = 0;
+    let idx = start;
+    while(p1 < len1 && p2 < len2) {
+        //Coloring animation will be at even index,
+        //"Insertion Animation" will be at odd index
+        animations.push([start + p1, mid + 1 + p2]);
+        if(arr1[p1] < arr2[p2]) {
+            array[idx] = arr1[p1];
+            animations.push(idx);
+            p1++;
+        } else {
+            array[idx] = arr2[p2];
+            animations.push(idx);
+            p2++;
+        }
+        idx++;
+    }
+
+    while(p1 < len1) {
+        array[idx] = arr1[p1];
+        animations.push([start + p1, -1]);
+        animations.push(idx);
+        p1++;
+        idx++;
+    }
+    while(p2 < len2) {
+        array[idx] = arr2[p2];
+        animations.push([-1, mid + 1 + p2]);
+        animations.push(idx);
+        p2++;
+        idx++;
+    }
 }
