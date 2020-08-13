@@ -7,11 +7,22 @@
     <body>
         <div id="app-container">
             <div id="control-navbar">
-                <button class="button" onclick="sort(bubbleSort())">Bubble Sort</button>
-                <button class="button" onclick="sort(selectionSort())">Selection Sort</button>
-                <button class="button" onclick="sort(insertionSort())">Insertion Sort</button>
-                <button class="button" onclick="sort(iterativeMergeSort())">Merge Sort</button>
-                <button class="button" onclick="initialize()">Randomize</button>
+                <div id="button-container">
+                    <button class="button" onclick="sort(bubbleSort())">Bubble Sort</button>
+                    <button class="button" onclick="sort(selectionSort())">Selection Sort</button>
+                    <button class="button" onclick="sort(insertionSort())">Insertion Sort</button>
+                    <button class="button" onclick="sort(mergeSort())">Merge Sort</button>
+                    <button class="button" onclick="initialize()">Randomize</button>
+                </div>
+                <div id="array-controls">
+                    <label>Length</label>
+                    <input oninput="updateSize()" type="range" min="10" max="300" step=10 value="100" id="arraySize">
+                    <span id="sizeDisplay">100</span>
+                    |
+                    <label>Speed (ms)</label>
+                    <input oninput="updateSpeed()" type="range" min="4" max="1000" value="10" id="animSpeed">
+                    <span id="speedDisplay">10</span>
+                </div>
             </div>
             <div id="bar-container">
             

@@ -16,8 +16,18 @@ body {
 #control-navbar {
     background-color: darkgrey;
     text-align: center;
+    font-size: 16px;
     margin-bottom: 1vw;
     padding: 0.5vw;
+    display: flex;
+}
+
+#button-container {
+    flex: 1;
+}
+
+#array-controls {
+    flex: 1;
 }
 
 #bar-container {

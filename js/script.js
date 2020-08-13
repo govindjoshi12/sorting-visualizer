@@ -1,5 +1,5 @@
 //Array
-let array = [];
+var array = [];
 var barContainer = null;
 var barArr = null;
 var sorter = null;
@@ -10,12 +10,27 @@ var barWidth = null;
 var margin = null;
 
 // Array and Animation Properties
-const ARRAY_SIZE = 30;
-const MIN_NUM = 35;
-const MAX_NUM = 1000;
-const ANIM_SPEED = 4; //setTimeout minimum is 4ms
+var timeouts = [];
+var ARRAY_SIZE = 100;
+var MIN_NUM = 35;
+var MAX_NUM = 500;
+var ANIM_SPEED = 10; //setTimeout minimum is 4ms
+const SWOOP_ANIM_SPEED = 4;
 
 window.onload = initialize;
+
+function updateSize() {
+    let newSize = document.getElementById("arraySize").value;
+    document.getElementById("sizeDisplay").textContent = newSize;
+    ARRAY_SIZE = newSize;
+    initialize();
+}
+
+function updateSpeed() {
+    let newSpeed = document.getElementById("animSpeed").value;
+    document.getElementById("speedDisplay").textContent = newSpeed;
+    ANIM_SPEED = newSpeed;
+}
 
 function initialize() {
     array = [];
@@ -66,7 +81,7 @@ function renderVisualizer() {
 function generateArrayBar(magnitude) {
     var arrayBar = document.createElement("div");
     arrayBar.className = "array-bar"
-    if(barWidth > 30)  
+    if(barWidth > 35)  
         arrayBar.textContent = magnitude;
     //Style
     arrayBar.style.textAlign = "center";
@@ -94,14 +109,24 @@ function animate() {
     //"Promise" objects, and all async functions
     //return a promise
     if(!sorter.next().done) {
-        setTimeout(animate, ANIM_SPEED);
+        timeouts.push(setTimeout(animate, ANIM_SPEED));
     }
 }
 
-function disableButtons(bool) {
+function stopAnimation() {
+    for(let i = 0; i < timeouts.length; i++) {
+        clearTimeout(timeouts[i]);
+    }
+}
+
+function disableControls(bool) {
     let buttons = document.getElementsByClassName("button");
     for(let i = 0; i < buttons.length; i++) {
         buttons[i].disabled = bool;
+    }
+    let other = document.getElementsByTagName("input");
+    for(let i = 0; i < other.length; i++) {
+        other[i].disabled = bool;
     }
 }
 
@@ -113,7 +138,7 @@ function removeSortedClass() {
 
 //Simple Sorts
 function* selectionSort() {
-    disableButtons(true);
+    disableControls(true);
     for(let i = 0; i < array.length - 1; i++) {
         let min_idx = i;
         for(let j = i + 1; j < array.length; j++) {
@@ -136,13 +161,13 @@ function* selectionSort() {
         yield;
     }
     barArr[array.length - 1].classList.add("sorted-bar");
-    disableButtons(false);
+    disableControls(false);
 }
 //Interrupting sort (by clicking randomize) doesn't stop animation, even though
 //array is still randomized...?
 
 function* insertionSort() {
-    disableButtons(true);
+    disableControls(true);
     for(let i = 1; i < array.length; i++) {
         if(i + 1 < array.length)
             barArr[i+1].classList.add("checking-bar");
@@ -166,16 +191,15 @@ function* insertionSort() {
             barArr[i+1].classList.remove("checking-bar");
         }
     }
-
     for(let i = 0; i < barArr.length; i++) {
         barArr[i].classList.add("sorted-bar");
         yield;
     }
-    disableButtons(false);
+    disableControls(false);
 }
 
 function* bubbleSort() {
-    disableButtons(true);
+    disableControls(true);
     for(let i = 0; i < array.length - 1; i++) {
         //After each iteration, i elements from the end of the array will be sorted
         let j = 0;
@@ -204,7 +228,7 @@ function* bubbleSort() {
        barArr[j].classList.add("sorted-bar");
     }
     barArr[0].classList.add("sorted-bar");
-    disableButtons(false);
+    disableControls(false);
 }
 
 //Complex Sorts
