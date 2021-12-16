@@ -235,12 +235,14 @@ function* bubbleSort() {
 const animations = [];
 function* mergeSort() {
     mergeSortHelper(0, array.length - 1);
+    let bar1 = 0;
+    let bar2 = 0;
     for(let i = 0; i < animations.length; i++) {
         //Using assumption that coloring will happen at even indicies
         //and "insertion" will happen at odd indicies
         if(i % 2 == 0) {
-            let bar1 = animations[i][0];
-            let bar2 = animations[i][1];
+            bar1 = animations[i][0];
+            bar2 = animations[i][1];
             try {
                 barArr[bar1].classList.add("checking-bar");
                 barArr[bar2].classList.add("checking-bar");
@@ -250,6 +252,8 @@ function* mergeSort() {
                 barArr[bar1].classList.remove("checking-bar");
                 barArr[bar2].classList.remove("checking-bar");
             } catch(error) {/* No op */}
+            //TODO: Change color only if p1 or p2 (from merge method)
+            //change, thus removing the "blinking" of bars 
         } else {
             //No need to swap any bars, just adjust height of sorted bar
             //based on current value in integer array
